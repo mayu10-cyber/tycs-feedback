@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Feedback – Tejyash Cyber Solutions</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #ffffff;
+      color: #333;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px;
+      background: #fff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo-text h1 {
+      color: #32CD32;
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .logo-text p {
+      color: #007BFF;
+      margin: 0;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    nav a {
+      margin-left: 20px;
+      text-decoration: none;
+      color: #000;
+      font-weight: 500;
+    }
+
+    .reviews-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .reviews-title {
+      font-size: 40px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      margin-top: 20px;
+    }
+
+    .review-container {
+      display: flex;
+      align-items: center;
+      position: relative;
+      width: 90%;
+      max-width: 800px;
+      min-height: 300px;
+    }
+
+    .review-box {
+      width: 100%;
+      height: 300px;
+      border-radius: 10px;
+      box-shadow: -10px 10px 40px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+      background: rgb(255, 253, 253);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .no-feedback {
+      font-size: 24px;
+      color: #666;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .end-feedback-message {
+      font-size: 24px;
+      color: #666;
+      text-align: center;
+      padding: 20px;
+      display: none;
+    }
+
+    .show-end-message .end-feedback-message {
+      display: block;
+    }
+
+    .show-end-message .r-card {
+      display: none !important;
+    }
+
+    .nav-arrows {
+      position: absolute;
+      right: -40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .nav-arrow {
+      width: 40px;
+      height: 40px;
+      background: #00c851;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s;
+    }
+
+    .nav-arrow:hover {
+      background: #009933;
+      transform: scale(1.1);
+    }
+
+    .nav-arrow img {
+      width: 20px;
+      height: 20px;
+      filter: brightness(0) invert(1);
+    }
+
+    #r-slide {
+      height: 300px;
+      width: 100%;
+    }
+
+    .r-card {
+      height: 300px;
+      padding: 40px;
+      background: #fff;
+    }
+
+    .review-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .client-name {
+      font-size: 20px;
+      color: #00c851;
+      margin-bottom: 5px;
+    }
+
+    .client-service {
+      font-size: 14px;
+      color: #444;
+    }
+
+    .review-rating {
+      font-size: 20px;
+      color: #f39c12;
+      text-align: right;
+    }
+
+    .review-text {
+      margin-top: 20px;
+      line-height: 1.5;
+    }
+
+    #feedbackForm {
+      display: none;
+      flex-direction: column;
+      background: #f1f1f1;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 10px;
+      width: 300px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #feedbackForm input,
+    #feedbackForm textarea {
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .save-feedback-btn {
+      padding: 10px;
+      background: #007BFF;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .save-feedback-btn:hover {
+      background: #0056b3;
+    }
+
+    #showFormBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    #showFormBtn:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo-container">
+      <img src="logo.png" alt="Logo" style="width:50px;">
+      <div class="logo-text">
+        <h1>Tejyash</h1>
+        <p>Cyber Solutions</p>
+      </div>
+    </div>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="About Us.html">About Us</a>
+      <a href="Team.html">Team Member</a>
+      <a href="clients.html">Clients</a>
+      <a href="feedback.html">feedback</a>
+      <a href="location.html">location</a>
+    </nav>
+  </header>
+
+  <section class="reviews-section">
+    <div class="reviews-title">Client <span style="color: #00c851;">Feedback</span></div>
+
+    <div class="review-container">
+      <div class="review-box">
+        <div id="r-slide">
+          <!-- Feedback cards will be inserted here by JavaScript -->
+          <div class="no-feedback">No feedback yet. Be the first to add your feedback!</div>
+          <div class="end-feedback-message"> Add your Own feedback!</div>
+        </div>
+      </div>
+      <div class="nav-arrows">
+        <div class="nav-arrow" id="upArrow">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/up.png" alt="Up">
+        </div>
+        <div class="nav-arrow" id="downArrow">
+          <img src="https://img.icons8.com/ios-filled/50/ffffff/down.png" alt="Down">
+        </div>
+      </div>
+    </div>
+
+    <button id="showFormBtn">Give Feedback</button>
+
+    <form id="feedbackForm">
+      <input name="name" id="userName" placeholder="Enter your name" required />
+      <input name="department" id="userDept" placeholder="Enter your Service" required />
+      <input name="rating" id="userRating" type="number" step="0.5" min="0" max="5" placeholder="Rating (0–5)" required />
+      <textarea name="feedback" id="userFeedback" rows="3" placeholder="Enter your feedback" required></textarea>
+      <button class="save-feedback-btn" type="submit">Save Feedback</button>
+    </form>
+  </section>
+
+  <script>
+  const form = document.getElementById('feedbackForm');
+  const toggleBtn = document.getElementById('showFormBtn');
+  const upArrow = document.getElementById('upArrow');
+  const downArrow = document.getElementById('downArrow');
+  const slide = document.getElementById('r-slide');
+
+  let currentIndex = 0;
+  let feedbackCards = [];
+
+  toggleBtn.addEventListener('click', () => {
+    form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+  });
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const formData = {
+      name: document.getElementById('userName').value.trim(),
+      department: document.getElementById('userDept').value.trim(),
+      rating: parseFloat(document.getElementById('userRating').value),
+      feedback: document.getElementById('userFeedback').value.trim(),
+      timestamp: new Date().toISOString()
+    };
+
+    if (!formData.name || !formData.department || isNaN(formData.rating) || !formData.feedback) {
+      alert('Please fill out all fields');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/api/feedback', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-api-key': 'my-secret-token'
+        },
+        body: JSON.stringify(formData)
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to submit feedback');
+      }
+      
+      const result = await response.json();
+      form.reset();
+      form.style.display = 'none';
+      await loadFeedback();
+      showCard(currentIndex);
+    } catch (err) {
+      alert('Something went wrong! Please try again.');
+      console.error('Feedback submission error:', err);
+    }
+  });
+
+  async function loadFeedback() {
+    try {
+      const response = await fetch('http://localhost:5000/api/feedback');
+      
+      if (!response.ok) {
+        throw new Error('Failed to load feedback');
+      }
+      
+      let feedbackList = await response.json();
+      slide.innerHTML = '';
+      feedbackCards = [];
+
+      if (!feedbackList || feedbackList.length === 0) {
+        const noFeedback = document.createElement('div');
+        noFeedback.className = 'no-feedback';
+        noFeedback.textContent = 'No feedback yet. Be the first to add your feedback!';
+        slide.appendChild(noFeedback);
+        upArrow.style.display = 'none';
+        downArrow.style.display = 'none';
+        return;
+      }
+
+      // Sort feedback by rating (highest first), then by timestamp (newest first for same ratings)
+      feedbackList.sort((a, b) => {
+        if (b.rating !== a.rating) {
+          return b.rating - a.rating;
+        }
+        return new Date(b.timestamp) - new Date(a.timestamp);
+      });
+
+      feedbackList.forEach(fb => {
+        if (!fb.name || !fb.department || !fb.rating || !fb.feedback) {
+          console.warn('Incomplete feedback entry:', fb);
+          return;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'r-card';
+        card.innerHTML = `
+          <div class="review-info">
+            <div>
+              <h3 class="client-name">${fb.name}</h3>
+              <p class="client-service">${fb.department}</p>
+            </div>
+            <div class="review-rating">${'★'.repeat(Math.floor(fb.rating))}${fb.rating % 1 ? '☆' : ''} ${fb.rating.toFixed(1)}</div>
+          </div>
+          <p class="review-text">${fb.feedback}</p>
+        `;
+        card.style.display = 'none';
+        slide.appendChild(card);
+        feedbackCards.push(card);
+      });
+
+      const endMessage = document.createElement('div');
+      endMessage.className = 'end-feedback-message';
+      endMessage.textContent = 'Add your Own feedback!';
+      slide.appendChild(endMessage);
+
+      if (feedbackCards.length > 0) {
+        upArrow.style.display = 'flex';
+        downArrow.style.display = 'flex';
+        currentIndex = 0;
+        showCard(currentIndex);
+      } else {
+        const noFeedback = document.createElement('div');
+        noFeedback.className = 'no-feedback';
+        noFeedback.textContent = 'No valid feedback to display';
+        slide.appendChild(noFeedback);
+        upArrow.style.display = 'none';
+        downArrow.style.display = 'none';
+      }
+    } catch (err) {
+      console.error('Error loading feedback:', err);
+      const errorMsg = document.createElement('div');
+      errorMsg.className = 'no-feedback';
+      errorMsg.textContent = 'Error loading feedback. Please try again later.';
+      slide.appendChild(errorMsg);
+      upArrow.style.display = 'none';
+      downArrow.style.display = 'none';
+    }
+  }
+
+  function showCard(index) {
+    const slideElement = document.getElementById('r-slide');
+    
+    if (feedbackCards.length === 0) {
+      slideElement.classList.remove('show-end-message');
+      return;
+    }
+    
+    if (index < 0) index = 0;
+    if (index >= feedbackCards.length) {
+      index = feedbackCards.length - 1;
+      slideElement.classList.add('show-end-message');
+    } else {
+      slideElement.classList.remove('show-end-message');
+    }
+    
+    feedbackCards.forEach((card, i) => {
+      card.style.display = i === index ? 'block' : 'none';
+    });
+    
+    currentIndex = index;
+    upArrow.style.opacity = index === 0 ? '0.5' : '1';
+    downArrow.style.opacity = index === feedbackCards.length - 1 ? '0.5' : '1';
+  }
+
+  upArrow.addEventListener('click', () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      showCard(currentIndex);
+    }
+  });
+
+  downArrow.addEventListener('click', () => {
+    if (currentIndex < feedbackCards.length - 1) {
+      currentIndex++;
+      showCard(currentIndex);
+    } else {
+      document.getElementById('r-slide').classList.add('show-end-message');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowUp' && currentIndex > 0) {
+      currentIndex--;
+      showCard(currentIndex);
+    } else if (e.key === 'ArrowDown' && currentIndex < feedbackCards.length - 1) {
+      currentIndex++;
+      showCard(currentIndex);
+    } else if (e.key === 'ArrowDown' && currentIndex === feedbackCards.length - 1) {
+      document.getElementById('r-slide').classList.add('show-end-message');
+    }
+  });
+
+  // Initial load
+  loadFeedback();
+  </script>
+</body>
+</html>

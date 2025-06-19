@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Loader + TYCS Particle Tornado</title>
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    #custom-loader {
+      position: fixed;
+      inset: 0;
+      background: #ffffff;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .loader-bg {
+      position: absolute;
+      width: 150%;
+      height: 150%;
+      background: #ffffff;
+      z-index: 0;
+    }
+
+    .loader-ring {
+      width: 100px;
+      height: 100px;
+      border: 10px solid rgba(0, 194, 63, 0.15);
+      border-top: 10px solid #00C23F;
+      border-radius: 50%;
+      animation: spin 1.3s linear infinite, pulse-glow 2s ease-in-out infinite;
+      z-index: 1;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 15px #00C23F, 0 0 30px #00C23F44; }
+      50% { box-shadow: 0 0 25px #00ff99, 0 0 45px #00ff9944; }
+    }
+
+    body.loaded { overflow: auto; }
+
+    #loader {
+      height: 100%;
+      width: 100%;
+      background: #ffffff;
+      position: fixed;
+      z-index: 999;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    #loader h1 {
+      font-size: 5vw;
+      font-family: 'Permanent Marker', cursive;
+      color: transparent;
+      background: linear-gradient(to right, lightgreen, rgb(6, 173, 6), green);
+      -webkit-background-clip: text;
+      opacity: 0;
+      animation: loadText 1s forwards;
+      position: relative;
+      z-index: 2;
+    }
+
+    #loader h1:nth-child(1) { animation-delay: 0s; }
+    #loader h1:nth-child(2) { animation-delay: 2s; }
+    #loader h1:nth-child(3) { animation-delay: 4s; }
+
+    @keyframes loadText {
+      0% { opacity: 0; transform: translateY(20px); }
+      10% { opacity: 1; transform: translateY(0); }
+      90% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-20px); }
+    }
+
+    #cube {
+      position: fixed;
+      top: 90%;
+      left: 49%;
+      transform-style: preserve-3d;
+      transform: translate(-50%, -50%);
+      perspective: 1200px;
+      z-index: 1;
+      width: 10%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background: radial-gradient(circle, #2fa947, #2cc06c);
+      border-radius: 50%;
+      box-shadow: 0 0 4px #5dbc70;
+      opacity: 0.5;
+      filter: drop-shadow(0 0 3px #5fd877);
+      transform-style: preserve-3d;
+      --x: 0;
+      --y: 0;
+      --z: 0;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translate3d(var(--x), var(--y), var(--z)) scale(1.2);
+      }
+      25% {
+        transform: translate3d(calc(var(--x) + 5px), calc(var(--y) - 4px), calc(var(--z) + 10px)) scale(1.2);
+      }
+      50% {
+        transform: translate3d(calc(var(--x) - 6px), calc(var(--y) + 6px), calc(var(--z) - 8px)) scale(1.2);
+      }
+      75% {
+        transform: translate3d(calc(var(--x) + 3px), calc(var(--y) - 5px), calc(var(--z) + 5px)) scale(1.2);
+      }
+      100% {
+        transform: translate3d(var(--x), var(--y), var(--z)) scale(1.2);
+      }
+    }
+
+    @keyframes gather {
+      0% {
+        transform: translate3d(var(--x), var(--y), var(--z)) scale(1.2);
+        opacity: 0.5;
+      }
+      100% {
+        transform: translate3d(0px, 0px, 0px) scale(1.5);
+        opacity: 1;
+      }
+    }
+
+    @keyframes tornado {
+      0% {
+        transform: translate3d(0px, 0px, 0px) scale(1.5);
+        opacity: 0.6;
+      }
+      50% {
+        transform: rotateY(720deg) translateY(-100px) translateX(50px) scale(0.5);
+        opacity: 0.4;
+      }
+      100% {
+        transform: rotateY(1440deg) translateY(-300px) translateX(0) scale(0.1);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Loader -->
+  <div id="custom-loader">
+    <div class="loader-bg"></div>
+    <div class="loader-ring"></div>
+  </div>
+
+  <!-- TYCS Loader -->
+  <div id="loader" style="display: none;">
+    <h1>Secure</h1>
+    <h1>Repair</h1>
+    <h1>Support</h1>
+    <div id="cube"></div>
+  </div>
+
+  <script>
+    const cube = document.getElementById('cube');
+    const particles = [];
+
+    function createParticles() {
+      const total = 200;
+      for (let i = 0; i < total; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+
+        const startX = (Math.random() - 0.5) * window.innerWidth * 1.5;
+        const startY = (Math.random() - 0.5) * window.innerHeight * 1.5;
+        const startZ = (Math.random() - 0.5) * 1000;
+
+        particle.style.setProperty('--x', `${startX}px`);
+        particle.style.setProperty('--y', `${startY}px`);
+        particle.style.setProperty('--z', `${startZ}px`);
+        particle.style.transform = `translate3d(${startX}px, ${startY}px, ${startZ}px) scale(1.2)`;
+
+        cube.appendChild(particle);
+        particles.push({ element: particle });
+      }
+    }
+
+    function gatherParticles() {
+      particles.forEach(({ element }) => {
+        element.style.animation = 'none';
+        void element.offsetWidth;
+        element.style.animation = 'gather 2s ease-in forwards';
+      });
+
+      setTimeout(() => {
+        particles.forEach(({ element }) => {
+          element.style.animation = 'tornado 2.5s ease-in forwards';
+        });
+
+        // 🌐 Redirect after tornado ends
+        setTimeout(() => {
+          window.location.href = "feedback.html"; // Change to your actual homepage URL
+        }, 2600);
+      }, 2200);
+    }
+
+    window.onload = () => {
+      setTimeout(() => {
+        const loader = document.getElementById('custom-loader');
+        loader.style.transition = 'opacity 0.6s ease';
+        loader.style.opacity = '0';
+
+        setTimeout(() => {
+          loader.style.display = 'none';
+          document.body.classList.add('loaded');
+
+          const mainLoader = document.getElementById('loader');
+          mainLoader.style.display = 'flex';
+          mainLoader.style.opacity = '1';
+
+          createParticles();
+
+          setTimeout(() => {
+            gatherParticles();
+          }, 6200); // After text animation
+        }, 600);
+      }, 3000); // Delay before loader ends
+    };
+  </script>
+</body>
+</html>
